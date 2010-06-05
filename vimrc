@@ -7,13 +7,12 @@ set tabstop=2
 syntax on
 set expandtab
 set backupdir=~/.vim/backup/
-set directory=~/.vim/temp/
 set swapfile
 set path=.,~/
 set backspace=indent,eol,start
 set smartindent "Turn on smartindent cindent|smartindent|autoindent
-set textwidth=100
-set pastetoggle=<F10>
+set textwidth=72
+set pastetoggle=<C-P>
 "Turn on syntax highligting
 if has("syntax")
   set syntax=on
@@ -203,7 +202,8 @@ if has("autocmd")
   autocmd BufNewFile *.html 0r ~/.vim/skeletons/skeleton.html
   autocmd BufNewFile *.tex 0r ~/.vim/skeletons/skeleton.tex
   autocmd BufNewFile,BufRead *.tex call AbbrevLatex()
-  autocmd BufNewFile *.py 0r ~/.vim/skeletons/skeleton.py
+  autocmd BufNewFile,BufRead .*rc set textwidth=0
+  autocmd BufNewFile *.py 0r ~/.vim/skeletons/skeleton.py | set textwidth=0
   autocmd BufRead *.css set smartindent
   autocmd BufNewFile *.sh 0put='#!/bin/sh' 
   autocmd BufNewFile,BufRead Makefile,makefile set noexpandtab | set list
