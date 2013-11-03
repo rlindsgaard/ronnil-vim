@@ -18,6 +18,10 @@ set colorcolumn=+1
 "Make special characters visible
 set listchars=tab:→\ ,eol:↓
 set list
+
+"Show cursor position
+set ruler
+
 "Turn on syntax highligting
 if has("syntax")
   set syntax=on
