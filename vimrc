@@ -5,18 +5,25 @@ set nu
 set shiftwidth=2
 set tabstop=2
 syntax on
-set expandtab
+"Expandtab is commented out due to coffee script fun
+set expandtab 
 set backupdir=~/.vim/backup/
 set swapfile
 set path=.,~/
 set backspace=indent,eol,start
 set smartindent "Turn on smartindent cindent|smartindent|autoindent
-set textwidth=72
-set pastetoggle=<C-P>
+set textwidth=80
+"Textwidth border
+set colorcolumn=+1
+"Make special characters visible
+set listchars=tab:→\ ,eol:↓
+set list
 "Turn on syntax highligting
 if has("syntax")
   set syntax=on
 endif
+
+"Highlight trailing whitespace
 
 let g:name = "Ronni Elken Lindsgaard"
 let g:mail = "ronni@diku.dk"
@@ -25,14 +32,6 @@ let g:mail = "ronni@diku.dk"
 
 if has("eval")
   "Define headerfunctions for different type of work
-  function! HeaderMS()
-    put = "/***********************************************************"
-    put = " *"
-    put = " * Ronni Elken Lindsgaard <ronni@mediastyle.dk>"
-    put = " * Copyright 2010 Mediastyle"
-    put = " *"
-    put = " **********************************************************/"
-  endfun
   function! HeaderPrivate()
     put = '/*'
     put = ' * Copyright 2010 Ronni Elken Lindsgaard <ronni@diku.dk>'
@@ -86,47 +85,6 @@ if has("eval")
      put = '<html xmlns=\"http://www.w3.org/1999/xhtml\">'
   endfun
 
-  function! CleverTab()
-    if strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
-      return "\<Tab>"
-    else
-      return "\<C-X>"
-    endif
-  endfun
-
-  function! Lfigure()
-    let l:options = input("Options: ","H!")
-    let l:caption = input("Caption: ")
-    let l:content = input("Content: ")
-    put = '\begin{figure}[' . options . ']'
-    put = '\begin{center}'
-    put = content
-    put = '\caption{' . caption . '}'
-    put = '\end{center}'
-    put = '\end{figure}'
-  endfun
-     function! IncludeGuardText()
-         let l:t = substitute(expand("%"), "[./]", "_", "g")
-         return toupper("GUARD_" . l:t)
-     endfunction
-     function! MakeIncludeGuards()
-         norm gg
-         /^$/
-         norm 2O
-         call setline(line("."), "#ifndef " . IncludeGuardText())
-         norm o
-         call setline(line("."), "#define " . IncludeGuardText() . " 1")
-         norm G
-         norm o
-         call setline(line("."), "#endif")
-     endfunction
- autocmd BufNewFile *.h 0put ='/* vim: set sw=4 sts=4 et foldmethod=syntax : */' |
-             \ call MakeIncludeGuards() |
-             \ set sw=4 sts=4 et foldmethod=syntax |
-             \ norm G
-  function! Author()
-    call setline(1, "Author: " . g:name . " <" . g:name . ">") 
-  endfun
 
 "  function! AbbreviateHTML()
     iabbrev <buffer> <div> <div></div>
@@ -192,9 +150,21 @@ if has("eval")
     iabbrev <buffer> ... \ldots
     iabbrev <buffer> *** \cdots
    endfun
-  
-  inoremap <Tab>  <C-R>=CleverTab()<CR>
+
+  "Show trailing whitespace
+  if has("autocmd")
+    highlight ExtraWhitespace ctermbg=red guibg=red
+    match ExtraWhitespace /\s\+$/
+    autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+    autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+    autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+    autocmd BufWinLeave * call clearmatches()
+  endif
 if has("autocmd")
+
+
+  highlight ExtraWhitespace ctermbg=red guibg=red
+  autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
   autocmd BufNewFile,BufRead *.php,*.module,*.install set syn=php |
     \ call AbbrevPHP() |
     \ call AbbrevProg()
